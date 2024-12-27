@@ -37,16 +37,13 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookResponseDto>> getAllBooks(@RequestParam(defaultValue = "10") Long limit,
-                                                             @RequestParam(defaultValue = "0") Long offset) {
-        return ResponseEntity.ok(bookMapper.toBookResponseDtoList(bookService.getAllBooks(limit, offset)));
+    public ResponseEntity<List<BookResponseDto>> getAllBooks() {
+        return ResponseEntity.ok(bookMapper.toBookResponseDtoList(bookService.getAllBooks()));
     }
 
     @GetMapping("/by-author")
-    public ResponseEntity<List<BookResponseDto>> getBooksByAuthor(@RequestParam String author,
-                                                                  @RequestParam(defaultValue = "10") Long limit,
-                                                                  @RequestParam(defaultValue = "0") Long offset) {
-        return ResponseEntity.ok(bookMapper.toBookResponseDtoList(bookService.getAllBooksByAuthor(author, limit, offset)));
+    public ResponseEntity<List<BookResponseDto>> getBooksByAuthor(@RequestParam String author) {
+        return ResponseEntity.ok(bookMapper.toBookResponseDtoList(bookService.getAllBooksByAuthor(author)));
     }
 
     @DeleteMapping("/{id}")

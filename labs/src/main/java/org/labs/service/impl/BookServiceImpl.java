@@ -1,72 +1,75 @@
 package org.labs.service.impl;
 
-import org.labs.exception.BookNotFoundException;
-import org.labs.service.BookService;
+import lombok.AllArgsConstructor;
+import org.labs.dao.BookDao;
 import org.labs.domain.Book;
 import org.labs.dto.BookRequestDto;
+import org.labs.service.BookService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class BookServiceImpl implements BookService {
-    List<Book> books = new ArrayList<>();
+    private final BookDao bookDao;
 
     @Override
     public Book createBook(BookRequestDto bookRequestDto) {
         Book newBook = Book.builder()
-                .id(UUID.randomUUID())
                 .title(bookRequestDto.getTitle())
                 .description(bookRequestDto.getDescription())
                 .author(bookRequestDto.getAuthor())
                 .price(bookRequestDto.getPrice())
                 .build();
 
-        books.add(newBook);
-
-        return newBook;
+        try {
+            return bookDao.save(newBook);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     public Book updateBook(UUID id, BookRequestDto bookRequestDto) {
-        Book existBook = books.stream().filter(b -> b.getId().equals(id)).findFirst()
-                .orElseThrow(() -> new BookNotFoundException(id.toString()));
+        Book existBook = bookDao.findById(id);
 
         existBook.setTitle(bookRequestDto.getTitle());
         existBook.setDescription(bookRequestDto.getDescription());
         existBook.setAuthor(bookRequestDto.getAuthor());
         existBook.setPrice(bookRequestDto.getPrice());
 
-        return existBook;
+        try {
+            return bookDao.save(existBook);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     public String deleteBook(UUID id) {
-        Book existBook = books.stream().filter(b -> b.getId().equals(id)).findFirst()
-                .orElseThrow(() -> new BookNotFoundException(id.toString()));
+        bookDao.delete(id);
 
-        books.remove(existBook);
-
-        return String.format("Book with id %s was deleted", id);
+        try {
+            return String.format("Book with id %s was deleted", id);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
-    public List<Book> getAllBooks(long limit, long offset) {
-        return books.stream().skip(offset * limit).limit(limit).toList();
+    public List<Book> getAllBooks() {
+        return bookDao.findAll();
     }
 
     @Override
-    public List<Book> getAllBooksByAuthor(String author, long limit, long offset) {
-        return books.stream()
-                .filter(book -> book.getAuthor().equals(author))
-                .skip(offset * limit).limit(limit).toList();
+    public List<Book> getAllBooksByAuthor(String author) {
+        return bookDao.findByAuthorName(author);
     }
 
     @Override
     public Book getBookById(UUID id) {
-        return books.stream().filter(b -> b.getId().equals(id)).findFirst()
-                .orElseThrow(() -> new BookNotFoundException(id.toString()));
+        return bookDao.findById(id);
     }
 }

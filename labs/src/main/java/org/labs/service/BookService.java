@@ -13,9 +13,9 @@ public interface BookService {
 
     String deleteBook(UUID id);
 
-    List<Book> getAllBooks(long limit, long offset);
+    List<Book> getAllBooks();
 
-    List<Book> getAllBooksByAuthor(String author, long limit, long offset);
+    List<Book> getAllBooksByAuthor(String author);
 
     Book getBookById(UUID id);
 }
