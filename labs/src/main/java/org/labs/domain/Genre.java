@@ -7,11 +7,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class Book {
+public class Genre {
     UUID id;
     String title;
-    Author author;
-    Genre genre;
-    String description;
-    double price;
 }

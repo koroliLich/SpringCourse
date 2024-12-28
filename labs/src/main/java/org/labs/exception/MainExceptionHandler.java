@@ -24,6 +24,22 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(GenreNotFoundException.class)
+    public ProblemDetail handleGenreNotFound(final GenreNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getLocalizedMessage());
+        problemDetail.setType(URI.create("genre-not-found"));
+        problemDetail.setTitle("Genre not found");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(AuthorNotFoundException.class)
+    public ProblemDetail handleAuthorNotFound(final AuthorNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getLocalizedMessage());
+        problemDetail.setType(URI.create("author-not-found"));
+        problemDetail.setTitle("Author not found");
+        return problemDetail;
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();

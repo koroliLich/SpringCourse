@@ -1,7 +1,7 @@
 package org.labs.service;
 
 import org.labs.domain.Book;
-import org.labs.dto.BookRequestDto;
+import org.labs.dto.book.BookRequestDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +15,8 @@ public interface BookService {
 
     List<Book> getAllBooks();
 
-    List<Book> getAllBooksByAuthor(String author);
+    List<Book> getAllBooksByAuthor(UUID authorId);
+    List<Book> getAllBooksByGenre(UUID genreId);
 
     Book getBookById(UUID id);
 }

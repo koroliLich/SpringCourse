@@ -2,8 +2,8 @@ package org.labs.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.labs.dto.BookRequestDto;
-import org.labs.dto.BookResponseDto;
+import org.labs.dto.book.BookRequestDto;
+import org.labs.dto.book.BookResponseDto;
 import org.labs.mapper.BookMapper;
 import org.labs.service.BookService;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +42,13 @@ public class BookController {
     }
 
     @GetMapping("/by-author")
-    public ResponseEntity<List<BookResponseDto>> getBooksByAuthor(@RequestParam String author) {
-        return ResponseEntity.ok(bookMapper.toBookResponseDtoList(bookService.getAllBooksByAuthor(author)));
+    public ResponseEntity<List<BookResponseDto>> getBooksByAuthor(@RequestParam UUID authorId) {
+        return ResponseEntity.ok(bookMapper.toBookResponseDtoList(bookService.getAllBooksByAuthor(authorId)));
+    }
+
+    @GetMapping("/by-genre")
+    public ResponseEntity<List<BookResponseDto>> getBooksByGenre(@RequestParam UUID genreId) {
+        return ResponseEntity.ok(bookMapper.toBookResponseDtoList(bookService.getAllBooksByGenre(genreId)));
     }
 
     @DeleteMapping("/{id}")
